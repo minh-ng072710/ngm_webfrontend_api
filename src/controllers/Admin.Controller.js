@@ -11,7 +11,19 @@ var storage = multer.diskStorage({
         cb(null, Date.now() + "-" + file.originalname)
     }
 });
-
+function formatTime() {
+    let year, month, date, hours, minutes, seconds;
+    var dt = new Date();
+    var dt_after;
+    year = dt.getFullYear().toString().padStart(4, '0')
+    month = (dt.getMonth() + 1).toString().padStart(2, '0')
+    date = dt.getDate().toString().padStart(2, '0')
+    hours = dt.getHours().toString().padStart(2, '0')
+    minutes = dt.getMinutes().toString().padStart(2, '0')
+    seconds = dt.getSeconds().toString().padStart(2, '0')
+    dt_after = (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds)
+    return dt_after;
+}
 var upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
@@ -51,7 +63,7 @@ var Create_Book = (req, res) => {
         Book_Name: req.body.Book_Name,
         Status: req.body.Status,
         Active: req.body.Active,
-        Time_Created: Date.now(),
+        Time_Created: formatTime(),
         Time_Updated: ''
     });
     res.send({ status: 200 })
@@ -66,7 +78,8 @@ var Update_Book = (req, res) => {
             querySnapshot.forEach(doc => {
                 console.log(doc.data())
                 doc.ref.update({
-                    Active: req.body.Status
+                    Active: req.body.Status,
+                    Time_Updated: formatTime()
                 })
             })
         }).catch(err => {
@@ -183,7 +196,7 @@ var Update_Cate = (req, res) => {
         Description_Cat: req.body.Description_Cat,
         Publication_Date: req.body.Publication_Date,
         Status_Cat: req.body.Status_Cat,
-        Time_Updated: '',
+        Time_Updated: formatTime(),
     });
 
     res.send({ status: 200 })
@@ -200,7 +213,7 @@ var Create_Cate = (req, res) => {
         Description_Cat: req.body.Description_Cat,
         Publication_Date: req.body.Publication_Date,
         Status_Cat: req.body.Status_Cat,
-        Time_Created: Date.now(),
+        Time_Created: formatTime(),
         Time_Updated: ''
     });
     res.send({ status: 200 })
